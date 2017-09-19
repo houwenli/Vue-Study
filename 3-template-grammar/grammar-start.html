@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>模板语法</title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		
+		<script src="https://unpkg.com/vue"></script>
+		<script type="text/javascript">
+			var testObj = {testA:1}
+		</script>
+
+	</head>
+	<body>
+	<!-- 插值 -->
+	#文本
+	<span>Message:{{ msg }}</span>
+	通过v-once指令也能完成一次性插入，以后数据变动时这个位置的支部会出现更新，但要留心这个节点所有的数据绑定
+	<span v-once>Message:{{ msg }}</span>
+
+	#原始HTNL
+	<div v-html="rawHtml"></div>
+
+	特性，在HTML特性上面要使用v-bind指令
+	<div v-bind:id="dynamicId"></div>
+
+	#使用javascript表达式
+	{{number+1}}
+	{{ok?'yes':'no'}}
+	{{message.split('').reverse().join()}}
+	<div v-bind:id="'list' + id"></div>
+	有个限制就是，每个绑定都只能包含单个表达式，所以下面的例子都不会生效
+	<!--这是一整个语句，不是表达式-->
+	{{var a = 1;}}  
+	<!-- 流程控制不会生效，要用三元运算符 -->
+	{{ if (ok){return message;}}}
+	模板表达式都是放在沙盒中，只能访问全局变量的一个白名单，如Math和Date。不能访问用户自己定义的全局变量
+	<div id="app1">
+		<!--这里调用全局变量就是错的-->
+		<!-- {{testObj.testA}} -->
+		<!--这里调用白名单Math是对的-->
+		{{Math.abs(a)}}
+	</div>
+
+
+	<!-- 指令 -->
+	指令是带有v-前缀的特殊属性。指令属性值的预期是单个javascript表达式。指令的职责是当表达式的值改变时将会产生连带影响作用到DOM上
+	<p v-if="seen">现在你看到了我</p>
+	#参数
+	一些指令能够接收一个参数 例如：v-bind v-on
+	<a v-bind:href="url"></a>
+	<a v-on:click="doSomething"></a>
+
+	#修饰符？？？？
+
+
+
+	<!-- 缩写 -->
+	v-前缀 主要是v-bind v-on 两个常用指令
+	<span v-bind:href="url"></span>
+	简写
+	<span :href="url"></span>
+	<span v-on:click="doSomething"></span>
+	简写
+	<span @click="doSomething"></span>
+
+		
+
+
+	
+	<script type="text/javascript">
+		var app1 = new Vue({
+			el:"#app1",
+			data:{a:-1}
+		})
+	</script>
+
+
+	</body>
+</html>

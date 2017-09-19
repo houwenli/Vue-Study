@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>测试 — </title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		<script src="https://unpkg.com/vue"></script>
+
+
+	</head>
+	<body>
+
+		
+		<script type="text/javascript">
+			/*********数据和方法********/
+
+			//当一个Vue实例被创建时，它向Vue的响应式系统中加入了其data对象中所能找到的所有属性。当这些属性的值发生变化时，视图将会产生“响应”
+			//例如
+			var data = {a:1}
+			var vm = new Vue({
+				data:data
+			})
+
+			//他们引用相同的对象
+			vm.a === data.a;
+			//改变其中一个的值将会影响到另一个
+			vm.a = 2;
+			console.log(data.a) //也会为2
+			data.a =3;
+			console.log(vm.a) //也会为3
+
+			//值得注意的是只有当实例被创建时data中存在的属性是响应式的，也就是说如果你添加毅哥新的属性是不会触发任何视图的“响应”
+			vm.b = 'hi';
+			//所以对以后需要的属性在创建实例时要先赋初始值
+
+			//除了data属性，vue实例还暴露的一些有用的实力属性和方法。他们都有前缀$，以便与用户定义的属性区分
+			var data = {a:1}
+			var vm = new Vue({
+				el:"#example",
+				data:data
+			})
+			vm.$data === data; //true
+			vm.$el === document.getElementById("example");
+
+			/*******实例的生命周期*******/
+			//Vue实例在被创建之前都要经过一系列的初始化过程，在生命周期的不同场景下调用，created , mounted , updated , destroyed
+			new Vue({
+				data:{a:1},
+				created:function(){
+					console.log("a is " + this.a)
+				}
+			})
+			//***不要选项属性或回调上使用箭头函数
+			
+		</script>
+
+
+	
+	
+
+	</body>
+</html>
+     

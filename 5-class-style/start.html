@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>Class 与 Style 绑定</title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		
+		<script src="https://unpkg.com/vue"></script>
+
+	</head>
+	<body>
+
+		
+		<!-- 绑定HTML Class -->
+		#对象语法
+		我们可以传给v-bind一个对象可以动态的切换class，下面例子中class=active取决于isActive是否为真
+		<!-- <div v-bind:class="{active:isActive}"></div> -->
+		也可以传入更多属性用来动态切换多个class，此外v-bind还可以与普通的class共存
+		<div id="app1" >
+			<div class="static" v-bind:class="{active:isActive,'text-danger': hasError}">
+				测试一下
+			</div>
+			<div class="static" v-bind:class="classObj">
+				测试一下2
+			</div>
+			我们还能配合使用计算属性，功能会更加完整强大
+			<div class="static" v-bind:class="classObjComputed">
+				测试一下3
+			</div>
+		</div>
+
+		#数组语法
+		<div id="app2">
+			<div v-bind:class="[activeClass,errorClass]">
+				测试一下4
+			</div>
+			<div v-bind:class="[isActive?activeClass:'',errorClass]">
+				测试一下5
+			</div>
+			还可以在数组语法中使用对象语法
+			<div v-bind:class="[{active:isActive},errorClass]">
+				测试一下6
+			</div>
+		</div>
+
+		#用在组件上
+		<div id="app3"></div>
+
+		<!-- 绑定内联样式 -->
+		<div id="app4">
+			<div v-bind:style="{color:activeColor,'font-size':fontSize+'px',transform:'scale(0.5)'}">
+				测试一下7
+			</div>
+			<div v-bind:style="styleObj">
+				测试一下8
+			</div>
+		</div>
+
+	
+	<script type="text/javascript">
+		var vm1 = new Vue({
+			el:"#app1",
+			data:{
+				isActive:true,
+				hasError:false,
+				classObj:{
+					active:true,
+					'text-danger':true
+				}
+			},
+			created:function(){
+				console.log( this.classObj)
+			},
+			computed:{
+				classObjComputed:function(){
+					return {
+						active:this.isActive,
+						'text-danger':this.hasError
+					}
+				}
+			}
+		});
+
+		var vm2 = new Vue({
+			el:"#app2",
+			data:{
+				isActive:true,
+				activeClass:"active",
+				errorClass:"text-danger"
+			}
+		})
+
+		var vm3 = new Vue({
+			el:"#app3",
+			data:{}
+		}) 
+
+		var vm4 = new Vue({
+			el:"#app4",
+			data:{
+				activeColor:"red",
+				fontSize:20,
+				styleObj:{
+					"color":"blue",
+					fontSize:30+"px"
+				}
+			}
+		})
+	</script>
+
+
+	</body>
+</html>
+     
