@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>列表渲染</title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		
+		<script src="https://unpkg.com/vue"></script>
+
+	</head>
+	<body>
+
+		我们用v-for指令根据一组数组的选项列表进行渲染
+		<ul id="app1">
+			<li v-for="item in items">
+				{{item.message}}
+			</li>
+		</ul>	
+
+		在 v-for 块中，我们拥有对父作用域属性的完全访问权限。v-for 还支持一个可选的第二个参数为当前项的索引。
+		<ul id="app2">
+			<li v-for="(item, index) in items">
+				{{parrentMessage}}---{{index}}---{{item.message}}
+			</li>
+			也可以对一个对象使用v-for
+			<li v-for="(value,key) in testObj">
+				{{key}}++++{{value}}
+			</li>
+		</ul>
+
+		数组更新检测
+		#变异方法
+	    push()
+	    pop()
+	    shift()
+	    unshift()
+	    splice()
+	    sort()
+	    reverse()
+	    在控制台中使用这些方法的时候都会导致DOM的更新
+	    //vm2.items.push({message:'gun'})
+
+	    #替换数组
+	    filter(), concat() 和 slice() 这些不会改变原始数组，但总是返回一个新数组。当使用非变异方法时，可以用新数组替换旧数组：
+	    //vm2.items = vm2.items.filter(function (item) {
+		//  return item.message.match(/nimei/)
+		//})
+
+		###注意事项
+		Vue 不能检测以下变动的数组：
+
+	    当你【利用索引直接设置一个项】时，例如：vm.items[indexOfItem] = newValue
+	    当你修改数组的长度时，例如：vm.items.length = newLength
+
+	    可以检测到
+	    vm2.items[0].message='hhhh';
+	    检测不到
+	    vm2.items[0]={message:'dawdawdwa'};
+
+	    //解决办法
+	    Vue.set(vm2.items,0,{message:'hahhahah'})
+	    vm2.items.splice(0,1,{message:'nimei'})
+
+	    对象更改检测注意事项
+	    1，Vue 不能检测对象属性的添加或删除
+
+
+
+
+
+	
+	<script type="text/javascript">
+		var vm1 = new Vue({
+			el:'#app1',
+			data:{
+				items:[
+					{message:'nimei'},
+					{message:'shacha'},
+					{message:'erhuo'}
+				]
+			},
+		});
+
+		var vm2 = new Vue({
+			el:'#app2',
+			data:{
+				parrentMessage:'hello my son',
+				items:[
+					{message:'nimei'},
+					{message:'shacha'},
+					{message:'erhuo'}
+				],
+				testObj:{
+					name:'houwenli',
+					age:'26',
+					sex:'男'
+				}
+			},
+		});
+	</script>
+
+
+	</body>
+</html>

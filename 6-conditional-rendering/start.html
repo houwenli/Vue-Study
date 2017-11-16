@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>条件渲染 </title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		
+		<script src="https://unpkg.com/vue"></script>
+
+	</head>
+	<body>
+		还可以使用v-else 以及v-else-if
+		v-else v-else-if必须紧随v-if v-else-if之后，否则就会报错
+		<div id="app1">
+			<h1 v-if="ok">OK!</h1>
+			<h1 v-else-if="template">TEMPLATE OK!</h1>
+			<h1 v-else>NO!</h1>
+			如果想一次切换多个元素呢
+			此时可以把要切换的元素用template包裹起来
+			<template v-if="template">
+				<h1>Title</h1>
+				<p>Paragraph 1</p>
+				<p>Paragraph 2</p>
+			</template>
+		</div>
+
+		管理可复用元素
+		Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染
+		意思就是，template里面的内容是共用的，比如input框，改变的只是里面的placeholder
+		<div id="app2">
+			<template v-if="loginType=='username'">
+				<label>Username</label>
+  				<input placeholder="Enter your username" key="username">
+			</template>
+			<template v-else>
+				<label>Email</label>
+  				<input placeholder="Enter your email address" key="email">
+			</template>
+			<input type="button" name="Toggle login type" v-on:click="Togglelogintype" value="Toggle login type">
+		</div>
+		但是这样也不总是满足要求，有些场景下是需要两个template互不干扰的
+		所以 Vue 为你提供了一种方式来表达“这两个元素是完全独立的，不要复用它们”。只需添加一个具有唯一值的 key 属性即可
+
+
+		还有v-show  v-show和v-if用法一样，区别是，v-show作用的元素始终显示在页面上，他只是改变元素的display属性
+
+
+		当 v-if 与 v-for 一起使用时，v-for 具有比 v-if 更高的优先级？？？？
+		
+
+		
+
+
+	
+	<script type="text/javascript">
+		var vm1 = new Vue({
+			el:"#app1",
+			data:{
+				ok:true,
+				template:true
+			}
+		});
+
+		var vm2 = new Vue({
+			el:"#app2",
+			data:{
+				loginType : 'username'
+			},
+			methods:{
+				Togglelogintype:function(){
+					this.loginType=='username'?this.loginType='':this.loginType='username';
+				}
+			}
+		});
+	</script>
+
+
+	</body>
+</html>
+     
