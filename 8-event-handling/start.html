@@ -9,12 +9,87 @@
 	</head>
 	<body>
 
+	可以用v-on指令监控DOM事件，""里面可以运行一些javascript代码
+	<div id="app1">
+		<button v-on:click="counter+=1">点我</button>
+		<p>The button above has been clicked {{ counter }} times.</p>
+
+		v-on接收方法
+		<button v-on:click="greet">打个招呼</button>
+
+		直接调用方法
+		<button v-on:click="greetAlert('hhhh')">点我一下</button>
+		<br>
+		有时也需要在内联语句处理器中访问原始的 DOM 事件
+		<button v-on:click="warn($event)">访问DOM</button>
+
+		<br>
+		事件修饰符
+		在事件处理程序中调用 event.preventDefault() 或 event.stopPropagation() 是非常常见的需求。尽管我们可以在方法中轻松实现这点，但更好的方式是：方法只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。
+
+	    .stop 				//阻止单击事件继续传播
+	    .prevent    		//阻止默认事件发生
+	    .capture 			//在捕获阶段触发事件
+	    .self				//只当在 event.target 是当前元素自身时触发处理函数
+	    .once
+	    <br>
+	    <button v-on:click.once="greetAlert('hhhh')">我只能点击一次</button>
+	    <br>
+	    <form v-on:click.prevent="greetAlert('hhhh')" action="http://www.baidu.com" method="get" target="_self">
+	    	<input type="submit" name="" value="我是提交按钮">
+	    </form>
+	    <br>
+	    <br>
+	    <br>
+	    按键修饰符
+	    在监听键盘事件时，我们经常需要检查常见的键值。Vue 允许为 v-on 在监听键盘事件时添加按键修饰符：
+	    13是enter
+	    <br>
+	    <input v-on:keyup.13="keycode($event.keyCode)">
+	    <br>
+	    记住所有的 keyCode 比较困难，所以 Vue 为最常用的按键提供了别名
+	    .enter
+	    .tab
+	    .delete (捕获“删除”和“退格”键)
+	    .esc
+	    .space
+	    .up
+	    .down
+	    .left
+	    .right
+	    可以通过全局 config.keyCodes 对象自定义按键修饰符别名：Vue.config.keyCodes.f1 = 112
+	    <br>
+	    <input v-on:keyup.space="keycode($event.keyCode)">
+
+	</div>
+	
+
 		
 
 
 	
 	<script type="text/javascript">
-		
+		var vm1 = new Vue({
+			el:"#app1",
+			data:{
+				counter:1,
+				name:'vue.js'
+			},
+			methods:{
+				greet:function(event){
+					console.log(event.target.tagName);
+				},
+				greetAlert:function(message){
+					alert('Hello '+(message?message:this.name));
+				},
+				warn:function(event){
+					console.log(event);
+				},
+				keycode:function(keycode){
+					console.log(keycode);
+				}
+			}
+		});
 	</script>
 
 
