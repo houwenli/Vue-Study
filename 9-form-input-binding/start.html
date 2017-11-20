@@ -10,12 +10,133 @@
 	</head>
 	<body>
 
-		
+		v-model会忽略所有表单元素的value、checked、selected特性的初始值。因为它会选择 Vue 实例数据来作为具体的值，你应该通过 JavaScript 在组件的 data 选项中声明初始值。
+		<div id="app1">
+			<input v-model="message1" type="text" name="" value="111">
+			<p>Message is:{{message1}}</p>
+			<br>
+			<br>
+			<span>Multiline message is:</span>
+			<p style="white-space: pre-line;">{{ message2 }}</p>
+			<br>
+			<textarea v-model="message2" placeholder="add multiple lines">
+				i'm test
+			</textarea>
 
+
+			<br>
+			复选框v-model绑定值为数组
+			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+			<input type="checkbox" id="john" value="John" v-model="checkedNames">
+			<label for="john">John</label>
+			<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+			<label for="mike">Mike</label>
+			<br>
+			<span>Checked names: {{ checkedNames }}</span>
+
+			<br>
+			<br>
+			单选按钮
+			<input type="radio" id="one" value="One" v-model="picked">
+			<label for="one">One</label>
+			<br>
+			<input type="radio" id="two" value="Two" v-model="picked">
+			<label for="two">Two</label>
+			<br>
+			<span>Picked: {{ picked }}</span>
+
+			<br><br>
+			列表框
+			<select  v-model="selected">
+				<option disabled value="">请选择</option>
+				<option>A</option>
+				<option>B</option>
+				<option>C</option>
+			</select>
+			<span>Selected: {{ selected }}</span>
+			<br>
+			多选列表
+			<select  v-model="selected1" multiple="multiple">
+				<option disabled value="">请选择</option>
+				<option>A</option>
+				<option>B</option>
+				<option>C</option>
+			</select>
+			<span>Selected: {{ selected1 }}</span>
+			<br>
+			动态选项用v-for渲染
+			<select v-model="selected2">
+				<option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
+			</select>
+			<span>Selected: {{ selected2 }}</span>
+			<br><br><br>
+			//值绑定
+			一般表单绑定的value都是静态字符串
+			<!-- 当选中时，`picked` 为字符串 "a" -->
+			<input type="radio" v-model="picked" value="a">
+			<!-- `toggle` 为 true 或 false -->
+			<input type="checkbox" v-model="toggle">
+			<!-- 当选中时，`selected` 为字符串 "abc" -->
+			<select v-model="selected">
+			  <option value="abc">ABC</option>
+			</select>
+			<br><br>
+			有时我们需要在表单上绑定一些动态值，并且这些值可以不是字符串<br>
+			复选框<br>
+			<input type="checkbox" v-model="toggle" v-bind:true-value="togglea" v-bind:false-value="toggleb" >
+			复选框的值是：{{toggle}}
+			<br><br>
+			选择列表选项
+			<select v-model="selected">
+			    <!-- 内联对象字面量 -->
+			  	<option v-bind:value="{ number: 123 }">123</option>
+			</select>
+
+			<br><br>
+			修饰符
+			<br>
+			lazy,当input中发生change事件时才会与数据变化联系在一起
+			<br>
+			<input type="" name="" v-model.lazy="msg">
+			lazy的值为{{msg}}
+			<br>
+			number,能将用户输入的值自动转化为number型
+			<br>
+			<input v-model.number="age" type="number">
+			<br>
+			number的值为{{age}}
+			<br>
+			trim,将用户输入中的首尾空格去掉
+			<input v-model.trim="trimmsg">
+			<br>
+			trimmsg的值为{{trimmsg}}
+		</div>
 
 	
 	<script type="text/javascript">
-		
+		var vm1 = new Vue({
+			el:'#app1',
+			data:{
+				message1:'aaa',
+				message2:'hahahhah',
+				checkedNames:["Jack"],
+				picked:'',
+				selected:'',
+				selected1:[],
+				selected2:'',
+				options:[{text:'One',value:'A'},{text:'Two',value:'B'},{text:'Three',value:'C'}],
+				togglea:{a:'aaa'},
+				toggleb:{b:'bbb'},
+				toggle:{},
+				msg:'',
+				age:'11',
+				trimmsg:''
+			},
+			methods:{
+
+			}
+		});
 	</script>
 
 
