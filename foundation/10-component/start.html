@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>测试 — </title>
+	    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		
+		<script src="https://unpkg.com/vue"></script>
+
+	</head>
+	<body>
+
+		组件可以扩展HTML元素，封装可重用的代码，在较高层面上，组件是自定义元素，vue.js的编译器为他添加特殊功能
+		<br>
+		注册一个组件的方法是
+		Vue.component('my-component',{})
+		//对于自定义标签命名的Vue.js不强制遵循 W3C 规则 (小写，并且包含一个短杠)
+		组件在注册之后，便可以作为自定义元素 <!-- <my-component></my-component> --> 在一个实例的模板中使用。注意确保在初始化根实例之前注册组件
+
+		<div id="app1">
+		  	<my-component></my-component>
+		  	<my-component></my-component>
+		  	也可以不把组件注册到全局变量中，同名情况下当前实例会覆盖全局变量
+		  	<my-component1></my-component1>
+		  	data 必须是函数<br>
+		  	构造 Vue 实例时传入的各种选项大多数都可以在组件里使用。只有一个例外：data 必须是函数,
+		  	如果在组件中使用data是对象的话，那么 Vue 会停止运行，并在控制台发出警告
+		</div>
+
+		//组件组合
+		Props 组件实例的作用域是孤立的,意味着不能直接在子组件中调用父组件的数据，父组件的数据需要通过 prop 才能下发到子组件中
+		子组件要显式地用 props 选项声明它预期的数据：
+		<div id="app2">
+			HTML 特性是不区分大小写的。所以，当使用的不是字符串模板时，camelCase (驼峰式命名) 的 prop 需要转换为相对应的 kebab-case (短横线分隔式命名)：
+			<child father-message="hello i'm father"></child>
+			#动态prop
+			与绑定到任何普通的 HTML 特性相类似，我们可以用 v-bind 来动态地将 prop 绑定到父组件的数据。每当父组件的数据变化时，该变化也会传导给子组件
+			<child v-bind:father-message="parentMsg"></child><br>
+			如果你想把一个对象的所有属性作为 prop 进行传递，可以使用不带任何参数的 v-bind
+			<child1 v-bind="todo"></child1>
+			#单向数据流
+			Prop 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是反过来不会。这是为了防止子组件无意间修改了父组件的状态，来避免应用的数据流变得难以理解。
+			另外，每次父组件更新时，子组件的所有 prop 都会更新为最新值。这意味着你不应该在子组件内部改变 prop。如果你这么做了，Vue 会在控制台给出警告。
+			在两种情况下，我们很容易忍不住想去修改 prop 中数据：
+			1，Prop 作为初始值传入后，子组件想把它当作局部数据来用；
+			2，Prop 作为原始数据传入，由子组件处理成其它数据输出。
+			对这两种情况，正确的应对方式是：
+
+		    1，定义一个局部变量，并用 prop 的值初始化它：
+
+		    props: ['initialCounter'],
+		    data: function () {
+		      return { counter: this.initialCounter }
+		    }
+
+		   2，定义一个计算属性，处理 prop 的值并返回：
+
+		    props: ['size'],
+		    computed: {
+		      normalizedSize: function () {
+		        return this.size.trim().toLowerCase()
+		      }
+		    }
+		    <child2 v-bind:father-message="parentMsg"></child2>
+		    #Prop 验证
+		    我们可以为组件的 prop 指定验证规则。如果传入的数据不符合要求，Vue 会发出警告。这对于开发给他人使用的组件非常有用。
+			<!-- <example></example> -->
+		</div>
+
+		<div id="app3">
+			自定义事件
+			#使用 v-on 绑定自定义事件
+			每个 Vue 实例都实现了事件接口，即：
+
+		    使用 $on(eventName) 监听事件
+		    使用 $emit(eventName) 触发事件
+		    {{total}}
+		    <button-conter v-on:increment="incrementTotal">{{test}}</button-conter>
+		    <button-conter v-on:increment="incrementTotal"></button-conter>
+		</div>
+
+		有时候，非父子关系的两个组件之间也需要通信。在简单的场景下，可以使用一个空的 Vue 实例作为事件总线：
+		var bus = new Vue()
+
+		// 触发组件 A 中的事件
+		bus.$emit('id-selected', 1)
+
+		// 在组件 B 创建的钩子中监听事件
+		bus.$on('id-selected', function (id){})
+
+		使用插槽分发内容
+		####父组件模板的内容在父组件作用域内编译；子组件模板的内容在子组件作用域内编译
+		#单个插槽
+		除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃。
+		当子组件模板只有一个没有属性的插槽时，父组件传入的整个内容片段将插入到插槽所在的 DOM 位置，并替换掉插槽标签本身。
+		最初在 <slot> 标签中的任何内容都被视为备用内容。备用内容在子组件的作用域内编译，并且只有在宿主元素为空，且没有要插入的内容时才显示备用内容。
+		<div id="app4">
+			<div>
+			  <h1>我是父组件的标题</h1>
+			  <component4>
+			    <p>这是一些初始内容</p>
+			    <p>这是更多的初始内容</p>
+			  </component4>
+			</div>
+		</div>
+		#具名插槽
+		仍然可以有一个匿名插槽，它是默认插槽，作为找不到匹配的内容片段的备用插槽。如果没有默认插槽，这些找不到匹配的内容片段将被抛弃。
+		<div id="app5">
+			<component5>
+				<h1 slot="header">{{title}}</h1>
+				<p>主要内容的一个段落。</p>
+				<p>另一个主要段落。</p>
+				<p slot="footer">这里有一些联系信息</p>
+				<p>另一个主要段落。</p>
+			</component5>
+		</div>
+
+		#作用域插槽
+		<div id="app6">
+			作用域插槽是一种特殊类型的插槽，用作一个 (能被传递数据的) 可重用模板，来代替已经渲染好的元素。
+			在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：
+
+			<br>
+			在父级中，具有特殊特性 slot-scope 的 <!-- <template> --> 元素必须存在，表示它是作用域插槽的模板。
+			slot-scope 的值将被用作一个临时变量名，此变量接收从子组件传递过来的 prop 对象
+			<div class="parent">
+			  <component6>
+			    <template slot-scope="props">
+			      <span>hello from parent</span>
+			      <span>{{ props.text }}</span>
+			    </template>
+			  </component6>
+			</div>
+		</div>
+
+		#动态组件
+		通过使用保留的 <!-- <component> --> 元素，动态地绑定到它的 is 特性，我们让多个组件可以使用同一个挂载点，并动态切换：
+		<div id="app7">
+			<component v-bind:is="currentView"></component>
+			#keep-alive
+			如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数：
+			<keep-alive>
+			  <component :is="currentView">
+			    <!-- 非活动组件将被缓存！ -->
+			  </component>
+			</keep-alive>
+		</div>
+		#编写可复用组件
+		在编写组件时，最好考虑好以后是否要进行复用。一次性组件间有紧密的耦合没关系，但是可复用组件应当定义一个清晰的公开接口，同时也不要对其使用的外层数据作出任何假设。
+	
+	<script type="text/javascript">
+		Vue.component('my-component',{
+			template:'<div v-on:click="componentClick">{{message}} I\'m test<input v-on:click="counter+=1" type="button" v-model="counter"/></div>',
+			// data:{
+			// 	message:'hello'
+			// }
+			data:function(){
+				return {
+					message:'hello',
+					counter:0
+				}
+			},
+			methods:{
+				componentClick:function(){
+					console.log(this);
+				}
+			}
+		})
+		var vm1 = new Vue({
+			el:'#app1',
+			data:{
+				message:'hello'
+			},
+			methods:{},
+			components:{'my-component1':{template:'<div>I\'m son test</div>'}}
+		});
+
+		var todo={
+			text: 'Learn Vue',
+  			isComplete: false
+		}
+
+		Vue.component('child',{
+			props:['fatherMessage'],
+			template:'<div>{{message}}<br><span>{{fatherMessage}}</span></div>',
+			data:function(){
+				return {
+					message:'hello i\'m span'
+				}
+			},
+		})
+		Vue.component('child1',{
+			props:['text','isComplete'],
+			template:'<div><span>{{text}}</span><span>{{isComplete}}</span></div>'
+		})
+
+		Vue.component('child2',{
+			props:['fatherMessage'],
+			template:'<div>{{sonMessageComputed}}</div>',
+			data:function(){
+				return {
+					sonMessage:this.fatherMessage+'son'
+				}
+			},
+			computed:{
+				sonMessageComputed:function(){
+					return this.fatherMessage+'sonComputed'
+				}
+			}
+		});
+		Vue.component('example', {
+			props: {
+				// 基础类型检测 (`null` 指允许任何类型)
+				propA: Number,
+				// 可能是多种类型
+				propB: [String, Number],
+				// 必传且是字符串
+				propC: {
+				  type: String,
+				  required: true
+				},
+				// 数值且有默认值
+				propD: {
+				  type: Number,
+				  default: 100
+				},
+				// 数组/对象的默认值应当由一个工厂函数返回
+				propE: {
+				  type: Object,
+				  default: function () {
+				    return { message: 'hello' }
+				  }
+				},
+				// 自定义验证函数
+				propF: {
+				  validator: function (value) {
+				    return value > 10
+				  }
+				}
+			}
+		})
+
+		var vm2 = new Vue({
+			el:'#app2',
+			data:{
+				parentMsg:'hello i\'m fatherhahhaha',
+				todo:todo
+			},
+			methods:{
+
+			}
+		});
+
+		Vue.component('button-conter',{
+			template:'<div v-on:click="incrementCounter">{{total}}</div>',
+			data:function(){
+				return {
+					total:0,
+					test:'我来测试一下，我是button-counter'
+				}
+			},
+			methods:{
+				incrementCounter:function(){
+					this.total+=1;
+					this.$emit('increment');
+				}
+			}
+		})
+
+		var vm3 = new Vue({
+			el:'#app3',
+			data:{
+				total:0,
+				test:'我来测试作用域'
+			},
+			methods:{
+				incrementTotal:function(){
+					this.total+=1;
+				}
+			}
+		})
+
+		Vue.component('component4',{
+			template:'<div>\
+				  <h2>我是子组件的标题</h2>\
+				  <slot>\
+				    只有在没有要分发的内容时才会显示。\
+				  </slot>\
+				</div>',
+			data:function(){
+				return {
+
+				}
+			},
+			methods:{
+
+			}
+		})
+		var vm4 = new Vue({
+			el:'#app4',
+			data:{
+
+			},
+			methods:{
+
+			}
+		})
+
+		Vue.component('component5',{
+			template:'<div class="container">\
+				<header>\
+					<slot name="header"></slot>\
+				</header>\
+				<main>\
+					<slot></slot>\
+				</main>\
+				<footer>\
+					<slot name="footer"></slot>\
+				</footer>\
+			</div>'
+		})
+		var vm5 = new Vue({
+			el:'#app5',
+			data:{
+				title:'我是app5的标题'
+			},
+			methods:{
+
+			}
+		})
+
+		Vue.component('component6',{
+			template:'<div class="child">\
+			  <slot text="hello from child"></slot>\
+			</div>'
+		})
+		var vm6 = new Vue({
+			el:'#app6',
+			data:{
+				title:'我是app6的标题'
+			},
+			methods:{
+
+			}
+		})
+
+		var vm7 = new Vue({
+			el:'#app7',
+			data:{
+				title:'我是app7的标题',
+				currentView:'home'
+			},
+			methods:{
+
+			},
+			components:{
+				home:{
+					template:'<div>我是home</div>'
+				},
+				posts:{
+					template:'<div>我是posts</div>'
+				},
+				archive:{
+					template:'<div>我是archive</div>'
+				},
+
+			}
+		})
+	</script>
+
+
+	</body>
+</html>
+     
